@@ -16,6 +16,14 @@ def run_spark_job(spark):
     # set up correct bootstrap server and port
     df = spark \
         .readStream \
+        .format("kafka") \
+        .option("kafka.bootstrap.servers", "localhost:<your port>") \
+        .option("subscribe", "<your topic name>") \
+        .option("startingOffsets", "earliest") \
+        .option("maxOffsetsPerTrigger", 200) \
+        .option("maxRatePerPartition", 200) \
+        .option("stopGracefullyOnShutdown", "true") \
+        .load()
 
     # Show schema for the incoming resources for checks
     df.printSchema()
