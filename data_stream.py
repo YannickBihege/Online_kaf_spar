@@ -5,7 +5,7 @@ from pyspark.sql.types import *
 import pyspark.sql.functions as psf
 
 
-# TODO Create a schema for incoming resources
+# Create a schema for incoming resources
 schema = StructType([
     StructField("crime_id", IntegerType(), True),
     StructField("original_crime_type_name", TimestampType(), True),
@@ -35,7 +35,7 @@ def run_spark_job(spark):
     df = spark \
         .readStream \
         .format("kafka") \
-        .option("kafka.bootstrap.servers", "localhost:<your port>") \
+        .option("kafka.bootstrap.servers", "localhost:9092") \
         .option("subscribe", "<your topic name>") \
         .option("startingOffsets", "earliest") \
         .option("maxOffsetsPerTrigger", 200) \
@@ -48,17 +48,18 @@ def run_spark_job(spark):
 
     # TODO extract the correct column from the kafka input resources
     # Take only value and convert it to String
-    kafka_df = df.selectExpr("")
+    kafka_df = df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
 
     service_table = kafka_df\
         .select(psf.from_json(psf.col('value'), schema).alias("DF"))\
         .select("DF.*")
 
     # TODO select original_crime_type_name and disposition
-    #distinct_table = 
+    distinct_table = df.distinct()
 
     # count the number of original crime type
     #agg_df = 
+    agg_df = df.agg(countDistinct("original_crime_type_name"))
 
     # TODO Q1. Submit a screen shot of a batch ingestion of the aggregation
     # TODO write output stream
@@ -69,7 +70,7 @@ def run_spark_job(spark):
     query.awaitTermination()
 
     # TODO get the right radio code json path
-    radio_code_json_filepath = ""
+    radio_code_json_filepath = "./radio_code.json"
     radio_code_df = spark.read.json(radio_code_json_filepath)
 
     # clean up your data so that the column names match on radio_code_df and agg_df
