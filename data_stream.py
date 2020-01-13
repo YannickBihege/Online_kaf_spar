@@ -7,7 +7,25 @@ import pyspark.sql.functions as psf
 
 # TODO Create a schema for incoming resources
 schema = StructType([
+    StructField("crime_id", IntegerType(), True),
+    StructField("original_crime_type_name", TimestampType(), True),
+    StructField("report_date", TimestampType(), True),
+    StructField("call_date", TimestampType(), True),
+    StructField("offense_date", TimestampType(), True),
+    StructField("call_time", TimestampType(), True),
+    StructField("call_date_time", TimestampType(), True),
+    StructField("disposition", StringType(), True),
+    StructField("address", StringType(), True),
+    StructField("city", StringType(), True),
+    StructField("state", StringType(), True),
+    StructField("agency_id", IntegerType(), True),
+    StructField("address_type", StringType(), True),
+    StructField("common_location", StringType(), True)
+    
 ])
+
+# TODO based on the df.show, build schema
+
 
 def run_spark_job(spark):
 
@@ -37,14 +55,14 @@ def run_spark_job(spark):
         .select("DF.*")
 
     # TODO select original_crime_type_name and disposition
-    distinct_table = 
+    #distinct_table = 
 
     # count the number of original crime type
-    agg_df = 
+    #agg_df = 
 
     # TODO Q1. Submit a screen shot of a batch ingestion of the aggregation
     # TODO write output stream
-    query = agg_df \
+    #query = agg_df \
 
 
     # TODO attach a ProgressReporter
@@ -61,7 +79,7 @@ def run_spark_job(spark):
     radio_code_df = radio_code_df.withColumnRenamed("disposition_code", "disposition")
 
     # TODO join on disposition column
-    join_query = agg_df.
+    #join_query = agg_df.
 
 
     join_query.awaitTermination()
@@ -82,3 +100,4 @@ if __name__ == "__main__":
     run_spark_job(spark)
 
     spark.stop()
+
