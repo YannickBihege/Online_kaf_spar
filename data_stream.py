@@ -1,3 +1,6 @@
+import findspark
+findspark.init('/home/yannick/dev/spark-2.4.4-bin-hadoop2.7')
+
 import logging
 import json
 from pyspark.sql import SparkSession
@@ -36,7 +39,7 @@ def run_spark_job(spark):
         .readStream \
         .format("kafka") \
         .option("kafka.bootstrap.servers", "localhost:9092") \
-        .option("subscribe", "<your topic name>") \
+        .option("subscribe", "police.calls") \
         .option("startingOffsets", "earliest") \
         .option("maxOffsetsPerTrigger", 200) \
         .option("maxRatePerPartition", 200) \
@@ -64,6 +67,22 @@ def run_spark_job(spark):
     # TODO Q1. Submit a screen shot of a batch ingestion of the aggregation
     # TODO write output stream
     #query = agg_df \
+   # left = spark.readStream \
+    #    .format("rate") \
+     #   .option("rowsPerSecond", "5") \
+      #  .option("numPartitions", "1").load() \
+       # .selectExpr("value AS row_id", "timestamp AS left_timestamp")
+
+    # TODO create a streaming dataframe that we'll join on
+    #right = spark.readStream \
+     #   .format("rate") \
+      #  .option("rowsPerSecond", "5") \
+       # .option("numPartitions", "1").load() \
+        #.where((rand() * 100).cast("integer") < 10) \
+        #.selectExpr("(value - 50) AS row_id ", "timestamp AS right_timestamp") \
+        #.where("row_id > 0")
+    # TODO join using row_id
+    #join_query = left.join(right, "row_id")
 
 
     # TODO attach a ProgressReporter
